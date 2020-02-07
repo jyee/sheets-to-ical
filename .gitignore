@@ -1,0 +1,3 @@
+*.swp
+app/venv
+app/config.yaml
