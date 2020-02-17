@@ -80,11 +80,13 @@ def make_event(record, template):
             event[field_name] = event[field_name].replace("["+column+"]", value)
 
     # Add ical event metadata
-    event["dtstamp"] = datetime.now()
-    m = hashlib.md5()
-    unique = event['summary'] + event['dtstart']
-    m.update(unique.encode('utf-8'))
-    event['uid'] = m.hexdigest()
+    if "dtstamp" not in event:
+        event["dtstamp"] = datetime.now()
+    if "uid" not in event:
+        m = hashlib.md5()
+        unique = event["summary"] + event["dtstart"]
+        m.update(unique.encode("utf-8"))
+        event["uid"] = m.hexdigest()
 
     # Convert dates
     event["dtstart"] = dateparser.parse(event["dtstart"])
