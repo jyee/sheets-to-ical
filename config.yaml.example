@@ -1,0 +1,57 @@
+- # You must create a service account and provide your service account with
+  # read access to the Google sheet.
+  # Go here to create a service account:
+  # https://console.cloud.google.com/iam-admin/serviceaccounts/
+  # Your service account will have an id such as:
+  # my-service-account@my-project.iam.gserviceaccount.com
+  # Share your Google sheet with that service account id.
+  # Next go to:
+  # https://console.cloud.google.com/iam-admin/serviceaccounts
+  # and create a private key for the account. Download the key as JSON.
+  # Set the name of that JSON file here.
+  authJSONFile: "my-google-api-auth.json"
+
+  # The spreadsheet ID.
+  # You can get this by going to your spreadsheet, then viewing the URL.
+  # The URL is in the format:
+  # https://docs.google.com/spreadsheets/d/<spreadsheetID>/edit
+  spreadsheetID: "asdfghjkl"
+
+  # The sheet name is the text name for the specific tab in your spreadsheet.
+  sheetName: "Sheet Name"
+
+  # If your spreadsheet has a header row, you should start on row 2 (or higher)
+  startRow: 2
+
+  # Map your columns to an arbitrary name. You will later use the name as a
+  # token to populate the ical event information.
+  # Set required: true for any column that must be included. Records without
+  # a required column will not generate an ical event. Typically the event
+  # name, start date, and end date should be required.
+  columns:
+    - column: A
+      name: "event"
+      required: true
+    - column: B
+      name: "startdate"
+      required: true
+    - column: C
+      name: "enddate"
+      required: true
+    - column: D
+      name: "location"
+
+  # Set an arbitrary endpoint. This will be used in the URL.
+  # Note that the app will create multiple ical feeds, just set different
+  # endpoints.
+  endpoint: "my-events.ics"
+
+  # Map your columns to ical fields.
+  # You must include dtstart, dtend, and summary fields. Note that ical uid
+  # and dtstamp fields will be auto-generated if not provided. 
+  event:
+    dtstart: "[startdate]"
+    dtend: "[enddate]"
+    summary: "[event]"
+    description: "[event] at [location]"
+    location: "[location]"
