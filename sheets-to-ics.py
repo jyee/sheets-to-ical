@@ -7,7 +7,6 @@ import hashlib
 import icalendar
 import json
 import os
-import requests
 import yaml
 
 # Get env vars
