@@ -2,7 +2,3 @@
 *.swp
 .python-version
 venv
-
-# Don't commit configs or auth tokens
-config.yaml
-*.json
