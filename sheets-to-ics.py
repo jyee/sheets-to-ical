@@ -11,6 +11,11 @@ import yaml
 
 # Get env vars
 config_file = os.environ.get("CONFIG_FILE", "config.yaml")
+if CREDS_JSON not in os.environ:
+    exit("Error: no JSON credentials.")
+creds_json = os.environ.get("CREDS_JSON")
+
+
 
 app = Flask(__name__)
 
@@ -40,10 +45,10 @@ def load_config(config_file, endpoint = False):
 
 # Load the spreadsheet data
 # TODO: Validate auth, error handling, etc
-def load_sheet(secret_file, sheet_id, sheet_range):
-    secret_file = os.path.join(os.getcwd(), secret_file)
+def load_sheet(json_creds, sheet_id, sheet_range):
     scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
-    credentials = service_account.Credentials.from_service_account_file(secret_file, scopes = scopes)
+    service_account_info = json.loads(json_creds)
+    credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes = scopes)
 
     service = build("sheets", "v4", credentials = credentials)
     sheet = service.spreadsheets()
@@ -117,7 +122,7 @@ def get_calendar(endpoint):
     # Load the config and get the google sheet.
     config = load_config(config_file, endpoint)
     col_range = get_range(config)
-    sheet = load_sheet(config["authJSONFile"], config["spreadsheetID"], col_range)
+    sheet = load_sheet(creds_json, config["spreadsheetID"], col_range)
 
     # Set up the ical
     cal = icalendar.Calendar()
