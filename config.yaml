@@ -1,0 +1,33 @@
+- authJSONFile: "sheetstoical-09b48c0f83cc.json"
+  spreadsheetID: "1K8_wzB05oFU7r9VlGBuKmjyjiXrKQUO8hyDT5JHOauI"
+  sheetName: "Talks"
+  startRow: 2
+  columns:
+    - column: A
+      name: "owner"
+    - column: B
+      name: "event"
+      required: true
+    - column: C
+      name: "status"
+      required: true
+    - column: D
+      name: "startdate"
+      required: true
+    - column: E
+      name: "enddate"
+      required: true
+    - column: F
+      name: "pubpri"
+    - column: H
+      name: "type"
+      required: true
+    - column: I
+      name: "location"
+  endpoint: "talks.ics"
+  event:
+    dtstart: "[startdate]"
+    dtend: "[enddate]"
+    summary: "[status]: [event] ([owner])"
+    description: "Public/Private: [pubpri]\nType: [type]"
+    location: "[location]"
