@@ -2,3 +2,6 @@
 *.swp
 .python-version
 venv
+
+# Don't commit local env vars
+.env
