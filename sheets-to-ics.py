@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-from datetime import datetime
+from datetime import datetime, timedelta
 import dateparser
 from flask import Flask
 import hashlib
@@ -11,7 +11,7 @@ import yaml
 
 # Get env vars
 config_file = os.environ.get("CONFIG_FILE", "config.yaml")
-if CREDS_JSON not in os.environ:
+if "CREDS_JSON" not in os.environ:
     exit("Error: no JSON credentials.")
 creds_json = os.environ.get("CREDS_JSON")
 
@@ -91,8 +91,11 @@ def make_event(record, template):
         event["uid"] = m.hexdigest()
 
     # Convert dates
-    event["dtstart"] = dateparser.parse(event["dtstart"])
-    event["dtend"] = dateparser.parse(event["dtend"])
+    dtstart = dateparser.parse(event["dtstart"])
+    event["dtstart"] = dtstart.date()
+    dtend = dateparser.parse(event["dtend"])
+    dtend = dtend + timedelta(days = 1)
+    event["dtend"] = dtend.date()
 
     return event
 

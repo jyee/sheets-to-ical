@@ -29,5 +29,5 @@ This app will read event records out of Google sheets and create an ical feed.
    Set the ical fields. You *must* include the `dtstart`, `dtend`, and `summary` fields. Values may include placeholders (enclosed in square brackets) for the columns you previously defined.
 1. Commit your configs.
 1. Add your Heroku remote: `heroku git:remote -a your-heroku-app`.
-1. Add your credentials as an environment variable to your heroku app.
+1. Create an environment variable named `CREDS_JSON` with the contents of your JSON credentials file.
 1. Deploy!
