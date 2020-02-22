@@ -6,6 +6,7 @@ from flask import Flask
 import hashlib
 import icalendar
 import json
+import logging
 import os
 import yaml
 
@@ -25,25 +26,30 @@ cache_config = []
 def load_config(config_file, endpoint = False):
     global cache_config
     if not cache_config:
+        logging.debug("load_config: loading config from file")
         cf = open(config_file, "r")
         config = yaml.safe_load(cf)
         cf.close()
         cache_config = config
     else:
+        logging.debug("load_config: loading config from cache")
         config = cache_config
 
     if endpoint:
         for cal in config:
             if cal["endpoint"] == endpoint:
+                logging.debug("load_config: returning config for {}".format(endpoint))
                 return cal
 
     # If not a specific endpoing, return an array of all configs
+    logging.debug("load_config: returning all config (no endpoint specified)")
     return config
 
 
 # Load the spreadsheet data
 # TODO: Validate auth, error handling, etc
 def load_sheet(json_creds, sheet_id, sheet_range):
+    logging.debug("load_sheet: loading sheet {} with range {}".format(sheet_id, sheet_range))
     scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
     service_account_info = json.loads(json_creds)
     credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes = scopes)
@@ -66,7 +72,21 @@ def load_record(row, columns):
             # If a required row is empty, return a blank record.
             # Further code should validate records.
             if column.get("required", False) and not row[index]:
+                logging.debug("load_record: column {} is required, but was empty. skipping record.".format(column["name"]))
                 return {}
+
+            # Include and exclude filters
+            # If exclude filter exists and the row has a record
+            if column.get("exclude", False) and row[index]:
+                if row[index] in column.get("exclude"):
+                    logging.debug("load_record: column {} cannot be {} (exclude filter). skipping record.".format(column["name"], row[index]))
+                    return {}
+
+            # If exclude filter exists and the row has a record
+            if column.get("include", False) and row[index]:
+                if row[index] not in column.get("include"):
+                    logging.debug("load_record: column {} cannot be {} (include filter). skipping record.".format(column["name"], row[index]))
+                    return {}
 
     return record
 
@@ -83,8 +103,10 @@ def make_event(record, template):
 
     # Add ical event metadata
     if "dtstamp" not in event:
+        logging.debug("make_event: adding dtstamp.")
         event["dtstamp"] = datetime.now()
     if "uid" not in event:
+        logging.debug("make_event: adding uid.")
         m = hashlib.md5()
         unique = event["summary"] + event["dtstart"]
         m.update(unique.encode("utf-8"))
