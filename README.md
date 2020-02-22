@@ -27,6 +27,7 @@ This app will read event records out of Google sheets and create an ical feed.
    Set the `endpoint`. Once you deploy the app, your ical feed will be available at `your-domain/cal/<endpoint>`.
 
    Set the ical fields. You *must* include the `dtstart`, `dtend`, and `summary` fields. Values may include placeholders (enclosed in square brackets) for the columns you previously defined.
-1. Commit your credentials and configs.
+1. Commit your configs.
 1. Add your Heroku remote: `heroku git:remote -a your-heroku-app`.
+1. Add your credentials as an environment variable to your heroku app.
 1. Deploy!

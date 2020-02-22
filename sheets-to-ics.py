@@ -15,8 +15,6 @@ if CREDS_JSON not in os.environ:
     exit("Error: no JSON credentials.")
 creds_json = os.environ.get("CREDS_JSON")
 
-
-
 app = Flask(__name__)
 
 # Load the config yaml
@@ -144,4 +142,4 @@ def get_calendar(endpoint):
     return cal.to_ical()
 
 if __name__ == "__main__":
-    app.run(host = "0.0.0.0", port = "5000")
+    app.run(host = "0.0.0.0")
