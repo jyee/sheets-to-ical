@@ -10,6 +10,9 @@ import logging
 import os
 import yaml
 
+LOGLEVEL = os.environ.get("LOGLEVEL", "WARNING").upper()
+logging.basicConfig(level=LOGLEVEL)
+
 # Get env vars
 config_file = os.environ.get("CONFIG_FILE", "config.yaml")
 if "CREDS_JSON" not in os.environ:
