@@ -1,17 +1,4 @@
-- # You must create a service account and provide your service account with
-  # read access to the Google sheet.
-  # Go here to create a service account:
-  # https://console.cloud.google.com/iam-admin/serviceaccounts/
-  # Your service account will have an id such as:
-  # my-service-account@my-project.iam.gserviceaccount.com
-  # Share your Google sheet with that service account id.
-  # Next go to:
-  # https://console.cloud.google.com/iam-admin/serviceaccounts
-  # and create a private key for the account. Download the key as JSON.
-  # Set the name of that JSON file here.
-  authJSONFile: "my-google-api-auth.json"
-
-  # The spreadsheet ID.
+- # The spreadsheet ID.
   # You can get this by going to your spreadsheet, then viewing the URL.
   # The URL is in the format:
   # https://docs.google.com/spreadsheets/d/<spreadsheetID>/edit
