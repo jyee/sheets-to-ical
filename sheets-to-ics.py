@@ -104,6 +104,9 @@ def make_event(record, template):
         for column, value in record.items():
             event[field_name] = event[field_name].replace("["+column+"]", value)
 
+        if field_name is "summary":
+            logging.debug("make_event: loading fields for event {}".format(event[field_name]))
+
     # Add ical event metadata
     if "dtstamp" not in event:
         logging.debug("make_event: adding dtstamp.")
