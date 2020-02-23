@@ -1,1 +1,1 @@
-web:python sheets-to-ics.py
+web: gunicorn sheets-to-ics:app
