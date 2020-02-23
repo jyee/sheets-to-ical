@@ -67,8 +67,9 @@ def load_sheet(json_creds, sheet_id, sheet_range):
 # Extract fields from a record
 def load_record(row, columns):
     record = {}
+    col_offset = get_offset(columns)
     for column in columns:
-        index = col_to_key(column["column"])
+        index = col_to_key(column["column"], col_offset)
         if index < len(row):
             record[column["name"]] = row[index]
 
@@ -121,7 +122,7 @@ def make_event(record, template):
     # Test for dates
     dtstart = dateparser.parse(event["dtstart"])
     dtend = dateparser.parse(event["dtend"])
-    if not isinstance(dtstart, datetime.date) or not isinstance(dtend, datetime.date):
+    if not isinstance(dtstart, datetime) or not isinstance(dtend, datetime):
         logging.debug("make_event: dates could not be parsed for record: {}".format(json.dumps(record)))
         return {}
 
@@ -143,11 +144,20 @@ def get_range(config):
     return "{}!{}{}:{}".format(config["sheetName"], r[0], config["startRow"], r[-1])
 
 
+# Get the column offset
+def get_offset(columns):
+    r = []
+    for column in columns:
+        r.append(column.get("column"))
+    r.sort()
+    return col_to_key(r[0])
+
+
 # Convert columns to indexes
 # Caveat: does not support cols past Z (e.g. no AA, AB, etc).
-def col_to_key(col):
+def col_to_key(col, offset = 0):
     cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-    return cols.index(col)
+    return cols.index(col) - offset
 
 
 # Get the calendar marked by the endpoint
