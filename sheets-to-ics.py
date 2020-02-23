@@ -118,10 +118,15 @@ def make_event(record, template):
         m.update(unique.encode("utf-8"))
         event["uid"] = m.hexdigest()
 
-    # Convert dates
+    # Test for dates
     dtstart = dateparser.parse(event["dtstart"])
-    event["dtstart"] = dtstart.date()
     dtend = dateparser.parse(event["dtend"])
+    if not isinstance(dtstart, datetime.date) or not isinstance(dtend, datetime.date):
+        logging.debug("make_event: dates could not be parsed for record: {}".format(json.dumps(record)))
+        return {}
+
+    # Convert dates
+    event["dtstart"] = dtstart.date()
     dtend = dtend + timedelta(days = 1)
     event["dtend"] = dtend.date()
 
@@ -164,6 +169,8 @@ def get_calendar(endpoint):
         if not record:
             continue
         ev = make_event(record, config["event"])
+        if not ev:
+            continue
 
         event = icalendar.Event()
         for key, value in ev.items():
