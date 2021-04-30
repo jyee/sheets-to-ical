@@ -17,7 +17,7 @@ python-dateutil==2.8.1
 pytz==2019.3
 PyYAML==5.3
 regex==2020.1.8
-rsa==4.0
+rsa==4.7
 six==1.14.0
 tzlocal==2.0.0
 uritemplate==3.0.1
